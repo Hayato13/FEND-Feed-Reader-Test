@@ -61,7 +61,7 @@ $(function() {
          * hidden by default.
          */ 
         it('menu is hidden by default', function(){
-            expect(body).not.toBe(null);
+            expect(body.classList.contains('menu-hidden')).toBe(true);
         });
 
         /* Test that ensures the menu element changes
@@ -79,7 +79,6 @@ $(function() {
          * is at least a single .entry element within the .feed container.
          */
     describe('Initial Entries', function(){
-        const feed = document.querySelector('.feed');
 
         beforeEach(function(done){
             loadFeed(0, function(){
@@ -87,8 +86,9 @@ $(function() {
             });
         });
 
-        it('should have atleast single entry', function(done){
-            expect(feed.children.length).not.toBe(0);
+        it('should have atleast single entry', function(done){    
+            const feed = document.querySelectorAll('.feed .entry');
+            expect(feed[0].classList.contains('entry')).toBe(true);
             done();
         });
     });
@@ -97,26 +97,21 @@ $(function() {
          * the content actually changes.
          */
     describe('New Feed Selection', function(){
-        const feed = document.querySelector('.feed');
-        let firstEntry;
-        let secondEntry;
+        let firstLoad;
+        let secondLoad;
 
         beforeEach(function(done){
             loadFeed(0, function(){
-                firstEntry = feed.children[0];
-                done();
-            });
-        });
-
-        beforeEach(function(done){
-            loadFeed(1, function(){
-                secondEntry = feed.children[1];
-                done();
+                firstLoad = document.querySelector('.feed').innerHTML;
+                loadFeed(1, function(){
+                    secondLoad = document.querySelector('.feed').innerHTML;
+                    done();
+                });
             });
         });
 
         it('feed should change on load', function(done){
-            expect(firstEntry).not.toBe(secondEntry);
+            expect(firstLoad).not.toBe(secondLoad);
             done();
         })
 
